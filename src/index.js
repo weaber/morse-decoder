@@ -37,51 +37,31 @@ const MORSE_TABLE = {
     '-----':  '0',
 };
 
-const codesKeys = Object.keys(MORSE_TABLE);
-
-const encodedKeys = codesKeys.map((item) => {
-    let code ='';
-    let zeros = '';
-
-    for (let i = 0; i < item.length; i++) {
-        if (item[i] === '-') {
-        code = code.concat('11');
-        } else if (item[i] === '.') {
-        code = code.concat('10');}    
-        
-    }
-    if (code.length < 10) {
-        let lettersLeft = 10 - code.length;    
-        for (let i = 0; i < lettersLeft; i++) {
-        zeros = zeros.concat('0');
-        }
-    }
-    return zeros.concat(code);
-});
-
-const getLetters = (string) => {
-    const LETTER_LENGTH = 10;
-    const lettersArr = [];
-    
-    for (let i = 0; i < string.length; i += LETTER_LENGTH) {        
-      lettersArr.push(string.substr(i, LETTER_LENGTH));
-    }
-    return lettersArr;
-  };
-
-
-
 function decode(expr) {
-    const codedMessage = getLetters(expr);
-    const lettersNumbers =[];
-    codedMessage.forEach((item) => {
-        lettersNumbers.push(encodedKeys.indexOf(item));
-    })
-    const decodedMessage = lettersNumbers.map((item) => {
-        return item === -1 ? " " : MORSE_TABLE[codesKeys[item]];  
-      });
-    const answer = decodedMessage.join('');
-    return answer;
+    const LETTER_LENGTH = 10;    
+    const dividedMessage = [];
+    const lettersIntoKeys = [];
+    
+    for (let i = 0; i < expr.length; i += LETTER_LENGTH) {        
+      dividedMessage.push(expr.substr(i, LETTER_LENGTH));
+    }    
+
+    dividedMessage.forEach((item) => {
+      let letter = '';
+      for (let i = 0; i < 10; i += 2) {
+        if (item.substr(i, 2) === '10') {
+          letter = letter.concat('.');
+        } else if (item.substr(i, 2) === '11') {
+          letter = letter.concat('-');                
+        };
+      };
+      lettersIntoKeys.push(letter)
+    });
+
+    const decodedLetters = lettersIntoKeys.map((item) => {
+      return item === "" ? " " : MORSE_TABLE[item];  
+    });
+    return decodedLetters.join('');    
 }
 
 module.exports = {
