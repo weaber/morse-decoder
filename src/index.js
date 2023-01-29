@@ -35,10 +35,14 @@ const MORSE_TABLE = {
     '---..':  '8',
     '----.':  '9',
     '-----':  '0',
+    '': ' ',
 };
 
 function decode(expr) {
-    const LETTER_LENGTH = 10;    
+    const LETTER_LENGTH = 10;
+    const SIGNAL_LENGTH = 2;
+    const DOT_CODE = '10';
+    const DASH_CODE = '11';
     const dividedMessage = [];
     const lettersIntoKeys = [];
     
@@ -48,10 +52,10 @@ function decode(expr) {
 
     dividedMessage.forEach((item) => {
       let letter = '';
-      for (let i = 0; i < 10; i += 2) {
-        if (item.substr(i, 2) === '10') {
+      for (let i = 0; i < 10; i += SIGNAL_LENGTH) {
+        if (item.substr(i, SIGNAL_LENGTH) === DOT_CODE) {
           letter = letter.concat('.');
-        } else if (item.substr(i, 2) === '11') {
+        } else if (item.substr(i, 2) === DASH_CODE) {
           letter = letter.concat('-');                
         };
       };
@@ -59,7 +63,7 @@ function decode(expr) {
     });
 
     const decodedLetters = lettersIntoKeys.map((item) => {
-      return item === "" ? " " : MORSE_TABLE[item];  
+      return MORSE_TABLE[item];  
     });
     return decodedLetters.join('');    
 }
